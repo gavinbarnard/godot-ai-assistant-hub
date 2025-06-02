@@ -168,5 +168,11 @@ func get_available_llm_providers() -> Array[Dictionary]:
 		"description": "Google Gemini LLM (requires API key)"
 	})
 
-	
+	# OpenWeb UI provider
+	providers.append({
+		"id": "openwebui_api",
+		"name": "OpenWebUI",
+		"description": "OpenWebUI for locally hosted LLM (requires API key)"
+	})
+		
 	return providers
