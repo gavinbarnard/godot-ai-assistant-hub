@@ -1,18 +1,22 @@
 class_name LLMConfigManager
 extends Node
 
-const API_SETTINGS_PATH := "user://llm_settings.cfg"
+const ADDON_FOLDER_PATH := "user://ai_assistant_hub/"
+const SETTINGS_FILE_NAME := "llm_settings.cfg"
 
 const SETTING_URL := "url"
 const SETTING_API_KEY := "api_key"
 
 var _api_id:String
-
+var _llm_settings_path:String
 
 func _init(api_id:String) -> void:
 	_api_id = api_id
 	if _api_id.is_empty():
 		push_error("Error while configuring API settings, no API ID provided")
+	if not DirAccess.dir_exists_absolute(ADDON_FOLDER_PATH):
+		DirAccess.make_dir_absolute(ADDON_FOLDER_PATH)
+	_llm_settings_path = ADDON_FOLDER_PATH + SETTINGS_FILE_NAME
 
 
 func save_url(url:String) -> void:
@@ -34,11 +38,13 @@ func load_key() -> String:
 func _save_string_property(property:String, value:String) -> void:
 	if not _api_id.is_empty() and not value.is_empty():
 		var config = ConfigFile.new()
-		config.load(API_SETTINGS_PATH)
-		var current_value = config.get_value(_api_id, property, "")
+		var load_response := config.load(_llm_settings_path)
+		var current_value := ""
+		if load_response == OK:
+			current_value = config.get_value(_api_id, property, "")
 		if current_value != value:
 			config.set_value(_api_id, property, value)
-			var save_response := config.save(API_SETTINGS_PATH)
+			var save_response := config.save(_llm_settings_path)
 			if save_response != OK:
 				printerr("Error when saving API configuration. Error: %d" % save_response)
 	else:
@@ -47,7 +53,7 @@ func _save_string_property(property:String, value:String) -> void:
 
 func _load_string_property(property:String) -> String:
 	var config := ConfigFile.new()
-	var load_response := config.load(API_SETTINGS_PATH)
+	var load_response := config.load(_llm_settings_path)
 	if load_response == OK:
 		var stored_value = config.get_value(_api_id, property, "")
 		return stored_value
