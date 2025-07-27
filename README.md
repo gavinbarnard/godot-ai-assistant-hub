@@ -86,12 +86,21 @@ In general this is what you need to do:
 9. Optionally, if you want the assistant to be able to interact with the code editor, configure quick prompts (see below).
 
 ### Configuring Quick Prompts and icon ###
-When you create an assistant type a new [Godot Resource](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) is created in `res://addons/ai_assistant_hub/assistants/`.
-To add an icon or quick prompts edit the resource by going to folder `res://addons/ai_assistant_hub/assistants/` and double clicking the resource for your assistant type. You can also edit its original name and prompt. Simply fill up the properties as you prefer.
-
-Remember the two keywords for Quick Prompts:
-* Use `{CODE}` to insert the code currently selected in the editor.
-* Use `{CHAT}` to include the current content of the text prompt.
+1. Right-click the button for your assistant type, there you can select Edit or Delete.
+2. Select Edit.
+3. In the *Type Icon* property select an image to display in the assistant button. (The addon has some icons under `res://addons/ai_assistant_hub/graphics/icons`, you can use those by using a *New AtlasTexture* in this property, loading the icons file in the *Atlas* property of the AtlasTexture, then clicking *Edit Region* to select the icon you want.)
+4. If you click the property *Quick Prompts* you will see an empty array, click *Add Element*, then in the empty slot select *New AIQuickPromptResource*.
+5. Click the new resource to open its properties in the editor.
+6. You will see a few properties:
+    * **Action Name**. This name will be displayed in the Quick Prompt button.
+    * **Action Prompt**. This is what this prompt will send to the chat. There are two keywords:
+        * Use `{CODE}` to insert the code currently selected in the editor.
+        * Use `{CHAT}` to include the current content of the text prompt.
+    * **Icon**. The icon to display in the Quick Prompt button.
+    * **Respose Target**. Where should the bot's answer go in Godot's editor.
+    * **Code Placement**. Only relevant when the Response Target is the Code Editor.
+    * **Format Response as Comment**. Only relevant when the Response Target is the Code Editor. Useful when the prompt is used to create inline code documentation.
+7. Once done start a new chat to see the Quick Prompt.
 
 Experiment and build the right type of assistants for your workflow.
 
