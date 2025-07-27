@@ -13,7 +13,7 @@ If you use ChatGPT, Gemini, or similar tools with a REST API, you could easily e
 
 [Click here to go to the tutorial playlist](https://www.youtube.com/playlist?list=PL2PLLTlAI2ogvgcY8mG-QsMI1dDUDPyF2)
 
-Thanks to contributors, additionally to Ollama, the following APIs are already supported:
+Thanks to contributors, additionally to **Ollama**, the following APIs are already supported:
 * Google Gemini
 * OpenRouter
 * Jan
@@ -74,16 +74,24 @@ The following keywords are used to allow the prompt to pull data from the Code E
 
 ## Setup steps
 In general this is what you need to do:
+
 0. Install Ollama or some other LLM supported and download a model.
 1. Download this addon and copy the folder ai_assistant_hub into your addons folder (`res://addons/ai_assistant_hub/`).
-2. Enable the plugin in your project settings, you should see a new tab `AI Hub` in the bottom panel.
-3.A You should see a list of models you have installed. Click one and use the "New assistant type".
-3.B Alternatively to 3.A, in folder `res://addons/ai_assistant_hub/assistants/` right click, Create New > Resource... > AIAssistantResource
-4. Fill up the data for your assistant.
-5. Add quick prompts to the assistant if needed.
-6. If added manually (3.B), click the reload button in the plugin to see your new assistant type. If you used 3.A it should be visible automatically.
-7. Click the assistant type button to start a chat with a new assistant of this type.
-8. Start using them to chat, pair programming, write, add inline documentation - it's up to you!
+2. Enable the plugin in your project settings (**Project > Project Settings... > Plugins**), you should see a new tab `AI Hub` in the bottom panel.
+3. Select an LLM provider, by default Ollama is selected.
+4. You should see a list of models you have installed. Click one and use the "New assistant type" button.
+5. Fill up the data for your assistant.
+6. After saving, you should see a new button for your assistant type.
+8. Click the assistant type button to start a chat with a new assistant of this type.
+9. Optionally, if you want the assistant to be able to interact with the code editor, configure quick prompts (see below).
+
+### Configuring Quick Prompts and icon ###
+When you create an assistant type a new [Godot Resource](https://docs.godotengine.org/en/stable/tutorials/scripting/resources.html) is created in `res://addons/ai_assistant_hub/assistants/`.
+To add an icon or quick prompts edit the resource by going to folder `res://addons/ai_assistant_hub/assistants/` and double clicking the resource for your assistant type. You can also edit its original name and prompt. Simply fill up the properties as you prefer.
+
+Remember the two keywords for Quick Prompts:
+* Use `{CODE}` to insert the code currently selected in the editor.
+* Use `{CHAT}` to include the current content of the text prompt.
 
 Experiment and build the right type of assistants for your workflow.
 
@@ -99,6 +107,14 @@ Some popular models that work fine in low-end computers at the time I wrote this
 
 If you have a powerful PC, just keep increasing the level of the model. You will see many models have versions like 1.5B, 3B, 7B, 30B, 77B, these mean billions of parameters. You can consider 1.5B for very low-end machines, and 77B for very powerful ones. If you are not sure, just try them out, they are easy to delete as well.
 
+**Upgrading to a newer version**
+-----------------------
+If you had the plugin installed and want to upgrade to the latest version, after downloading it, follow these steps:
+
+1. **Disable** the plugin from **Project > Project Settings... > Plugins**.
+2. Pull the **ai_assistant_hub** folder from the new version into your addons folder (don't delete the previous one so you don't lose your assistants). You may see errors in Godot's output tab, that is fine.
+3. Ensure Godot loads into memory the new version: **Project > Reload Current Project**
+4. **Enable** the plugin. You should not see any errors in the output tab, but in some cases you may see some message confirming the migration of old settings.
 
 **Leave a contribution!**
 -----------------------
