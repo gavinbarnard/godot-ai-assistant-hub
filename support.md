@@ -8,6 +8,3 @@ Ways to support this project:
   If you find bugs, report them giving all the details.
 ### 4. Enhance it
   Discuss some enhancement and make a pull request.
-
------
-Looking forward to see your contributions! 🙌
