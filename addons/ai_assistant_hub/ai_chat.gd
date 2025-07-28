@@ -61,7 +61,7 @@ func initialize(plugin:AIHubPlugin, assistant_settings: AIAssistantResource, bot
 		
 	if _assistant_settings: # We need to check this, otherwise this is called when editing the plugin
 		_load_api(llm_provider)
-		_conversation.set_system_message(_assistant_settings.ai_description)
+		_conversation.set_system_message("%s\nYour name is %s." % [_assistant_settings.ai_description, _bot_name])
 		
 		temperature_slider.value = assistant_settings.custom_temperature
 		temperature_override_checkbox.button_pressed = assistant_settings.use_custom_temperature
@@ -98,9 +98,9 @@ func _load_api(llm_provider:LLMProviderResource) -> void:
 func _greet() -> void:
 	if _assistant_settings.quick_prompts.size() == 0:
 		_add_to_chat("This assistant type doesn't have Quick Prompts defined. Add them to the assistant's resource configuration to unlock some additional capabilities, like writing in the code editor.", Caller.System)
-	
-	var greet_prompt := "Give a short greeting including just your name (which is \"%s\") and how can you help in a concise sentence." % _bot_name
-	_submit_prompt(greet_prompt)
+	if not ProjectSettings.get_setting(AIHubPlugin.PREF_SKIP_GREETING, false):
+		var greet_prompt:= "In one short sentence say hello and introduce yourself by name."
+		_submit_prompt(greet_prompt)
 
 
 func _input(event: InputEvent) -> void:
