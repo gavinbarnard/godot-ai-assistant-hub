@@ -82,8 +82,8 @@ In general this is what you need to do:
 4. You should see a list of models you have installed. Click one and use the "New assistant type" button.
 5. Fill up the data for your assistant.
 6. After saving, you should see a new button for your assistant type.
+7. Your assistant type will open in the Inspector panel, there you can optionally confirgure an icon and Quick Prompts for your assistant type, the later would allow it to interact with the code editor.
 8. Click the assistant type button to start a chat with a new assistant of this type.
-9. Optionally, if you want the assistant to be able to interact with the code editor, configure quick prompts (see below).
 
 ### Configuring Quick Prompts and icon ###
 1. Right-click the button for your assistant type, there you can select Edit or Delete.
