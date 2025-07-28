@@ -5,6 +5,7 @@ extends EditorPlugin
 enum ThinkingTargets { Output, Chat, Discard }
 const PREF_REMOVE_THINK:= "plugins/ai_assistant_hub/preferences/thinking_target"
 const PREF_SCROLL_BOTTOM:= "plugins/ai_assistant_hub/preferences/always_scroll_to_bottom"
+const PREF_SKIP_GREETING:= "plugins/ai_assistant_hub/preferences/skip_greeting"
 
 const CONFIG_LLM_API:= "plugins/ai_assistant_hub/llm_api"
 
@@ -62,6 +63,10 @@ func initialize_project_settings() -> void:
 	
 	if not ProjectSettings.has_setting(PREF_REMOVE_THINK):
 		ProjectSettings.set_setting(PREF_REMOVE_THINK, ThinkingTargets.Output)
+		ProjectSettings.save()
+	
+	if not ProjectSettings.has_setting(PREF_SKIP_GREETING):
+		ProjectSettings.set_setting(PREF_SKIP_GREETING, false)
 		ProjectSettings.save()
 	
 	var property_info = {

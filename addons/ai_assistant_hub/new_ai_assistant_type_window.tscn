@@ -100,9 +100,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "NOTE: This will create a resource under %s using the name below.
 - You will see a new button in the AI Hub tab, click it to start a new chat with your assistant.
-- The resource file will open in the Inspector editor, there you can add an icon and other optional properties.
-- You can go back to edit the assistant type configuration by editing this resource (.tres) file.
-- You can delete the assistant type by deleting the resource file."
+- The resource will open in the Inspector editor, there you can add an icon, Quick Prompts, and other optional properties."
 autowrap_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxCreateButton"]

@@ -61,7 +61,7 @@ func initialize(plugin:AIHubPlugin, assistant_settings: AIAssistantResource, bot
 		
 	if _assistant_settings: # We need to check this, otherwise this is called when editing the plugin
 		_load_api(llm_provider)
-		_conversation.set_system_message(_assistant_settings.ai_description)
+		_conversation.set_system_message("%s\nYour name is %s." % [_assistant_settings.ai_description, _bot_name])
 		
 		temperature_slider.value = assistant_settings.custom_temperature
 		temperature_override_checkbox.button_pressed = assistant_settings.use_custom_temperature
@@ -73,6 +73,7 @@ func initialize(plugin:AIHubPlugin, assistant_settings: AIAssistantResource, bot
 		for qp in _assistant_settings.quick_prompts:
 			var qp_button:= Button.new()
 			qp_button.text = qp.action_name
+			qp_button.tooltip_text = qp.action_prompt
 			qp_button.icon = qp.icon
 			qp_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			qp_button.pressed.connect(func(): _on_qp_button_pressed(qp))
@@ -98,9 +99,9 @@ func _load_api(llm_provider:LLMProviderResource) -> void:
 func _greet() -> void:
 	if _assistant_settings.quick_prompts.size() == 0:
 		_add_to_chat("This assistant type doesn't have Quick Prompts defined. Add them to the assistant's resource configuration to unlock some additional capabilities, like writing in the code editor.", Caller.System)
-	
-	var greet_prompt := "Give a short greeting including just your name (which is \"%s\") and how can you help in a concise sentence." % _bot_name
-	_submit_prompt(greet_prompt)
+	if not ProjectSettings.get_setting(AIHubPlugin.PREF_SKIP_GREETING, false):
+		var greet_prompt:= "In one short sentence say hello and introduce yourself by name."
+		_submit_prompt(greet_prompt)
 
 
 func _input(event: InputEvent) -> void:
@@ -200,33 +201,49 @@ func _add_to_chat(text:String, caller:Caller) -> void:
 		# AI replies depend on the auto-scroll switch
 		output_window.scroll_following = auto_scroll_to_bottom
 	
-	var prefix:String
-	var suffix:String
+	# Save current text length to calculate how much new content was added
+	var prev_text_length := output_window.text.length()
+	
 	match caller:
 		Caller.You:
-			prefix = "\n[color=FFFF00]> "
-			suffix = "[/color]\n"
+			output_window.push_color(Color(0xFFFF00FF))
+			output_window.append_text("\n> %s\n" % text)
 		Caller.Bot:
-			prefix = "\n[right][color=777777][b]%s[/b][/color]:\n" % _bot_name
-			var code_found := false
-			if text.contains("```gdscript"):
-				code_found = true
-				text = text.replace("```gdscript","[left][color=33AAFF]")
-			if text.contains("```glsl"):
-				code_found = true
-				text = text.replace("```glsl","[left][color=33AAFF]")
-			if code_found:
-				text = text.replace("```","[/color][/left]")
-			suffix = "[/right]\n"
+			output_window.push_indent(1)
+			output_window.push_indent(1)
+			output_window.append_text("\n[color=FF770066][b]%s[/b][/color]:\n" % _bot_name)
+			output_window.push_indent(1)
+			if text.count("```") > 1:
+				# Format markup response with code
+				var parts:= text.split("```")
+				var writing_code := false
+				for part in parts:
+					if writing_code:
+						var subparts = part.split("\n", true, 1)
+						output_window.push_color(Color(0x676767FF))
+						output_window.append_text("```%s" % subparts[0])
+						output_window.push_indent(1)
+						output_window.push_color(Color(0x33AAFFFF))
+						if subparts.size() > 1:
+							output_window.append_text("[code]%s[/code]" % subparts[1])
+						output_window.pop()
+						output_window.pop()
+						output_window.append_text("```")
+						output_window.pop()
+					else:
+						output_window.append_text(part)
+					writing_code = !writing_code
+				output_window.append_text("\n")
+			else:
+				# Format bbcode response
+				text = text.replace("[code]","[color=33AAFFFF][code]")
+				text = text.replace("[/code]","[/code][/color]")
+				output_window.append_text("%s\n" % text)
 		Caller.System:
-			prefix = "\n[center][color=FF7700][ "
-			suffix = " ][/color][/center]\n"
+			output_window.push_color(Color(0xFF7700FF))
+			output_window.append_text("\n[center]%s[/center]\n" % text)
 	
-	# Save current text length to calculate how much new content was added
-	var prev_text_length = output_window.text.length()
-	
-	# Add new content
-	output_window.text += "%s%s%s" % [prefix, text, suffix]
+	output_window.pop_all()
 	
 	# If this is an AI reply and auto-scroll is disabled, scroll one page
 	if caller == Caller.Bot and not auto_scroll_to_bottom:
