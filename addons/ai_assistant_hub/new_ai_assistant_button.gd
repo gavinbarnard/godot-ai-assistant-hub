@@ -44,7 +44,7 @@ func _on_pressed() -> void:
 	_chat = AI_CHAT.instantiate()
 	_chat.initialize(_plugin, _data, _name)
 	if _data.type_icon == null:
-		_chat.name = "%s [%s]" % [text, _name]
+		_chat.name = "[%s] %s" % [text, _name]
 	else:
 		_chat.name = "%s" % [_name]
 	chat_created.emit(_chat, _data)

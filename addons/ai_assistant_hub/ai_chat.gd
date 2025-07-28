@@ -73,6 +73,7 @@ func initialize(plugin:AIHubPlugin, assistant_settings: AIAssistantResource, bot
 		for qp in _assistant_settings.quick_prompts:
 			var qp_button:= Button.new()
 			qp_button.text = qp.action_name
+			qp_button.tooltip_text = qp.action_prompt
 			qp_button.icon = qp.icon
 			qp_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			qp_button.pressed.connect(func(): _on_qp_button_pressed(qp))
