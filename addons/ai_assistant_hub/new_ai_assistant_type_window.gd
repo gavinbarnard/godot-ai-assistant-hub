@@ -29,7 +29,7 @@ func _on_name_line_edit_text_changed(new_text: String) -> void:
 	if new_text.is_empty():
 		res_name_line_edit.text = ""
 	else:
-		res_name_line_edit.text = "ai_%s" % new_text.to_lower().replace(" ","_")
+		res_name_line_edit.text = "ai_%s" % new_text.to_lower().replace(" ","_").validate_filename()
 	_on_res_name_line_edit_text_changed(res_name_line_edit.text)
 
 
@@ -39,7 +39,7 @@ func _on_create_button_pressed() -> void:
 	res.ai_model = model_line_edit.text
 	res.llm_provider = _llm_provider
 	res.type_name = name_line_edit.text
-	var path:= _assistants_path + "/" + res_name_line_edit.text + ".tres"
+	var path:= _assistants_path + "/" + res_name_line_edit.text.validate_filename() + ".tres"
 	res.take_over_path(path)
 	var error := ResourceSaver.save(res, path)
 	if error != OK:
